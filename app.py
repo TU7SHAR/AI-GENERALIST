@@ -9,22 +9,11 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Initializing the latest SDK Client
+# Initializing the SDK Client
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Use the specific Lite model for your assignment
+# Your chosen model
 MODEL_ID = "gemini-3.1-flash-lite-preview"
-
-# Adapted instructions from your project to meet assignment goals
-SYSTEM_INSTRUCTION = (
-    "You are a friendly, conversational Senior AI Architect. "
-    "Speak like a helpful human colleague. "
-    "Your goal is to deconstruct user projects into actionable milestones. "
-    "Keep answers brief, natural, and conversational. "
-    "DO NOT use bulleted lists in your main dialogue. "
-    "Format your final technical plan as a structured JSON object. "
-    "If information is missing, say: 'Information not found. You can UPDATE me via the /admin panel.'"
-)
 
 @app.route('/')
 def index():
@@ -33,21 +22,14 @@ def index():
 @app.route('/analyze', methods=['POST'])
 def analyze():
     user_input = request.json.get("goal")
-    target_store_id = request.json.get("store_id", "default_store") # Use for Knowledge Base if needed
     
     if not user_input:
         return jsonify({"error": "No goal provided"}), 400
 
-    # Structured Output Config
+    # Clean, simple config. No File Search tools. Just JSON formatting.
     config = types.GenerateContentConfig(
-        system_instruction=SYSTEM_INSTRUCTION,
+        system_instruction="You are a Technical Architect. Break down the user's project into technical steps.",
         response_mime_type="application/json",
-        # Adding File Search tool logic inspired by your project
-        tools=[types.Tool(
-            file_search=types.FileSearch(
-                file_search_store_names=[target_store_id]
-            )
-        )],
         response_schema={
             "type": "OBJECT",
             "properties": {
@@ -80,10 +62,7 @@ def analyze():
         
     except Exception as e:
         print(f"Error: {e}")
-        # Custom error message inspired by your handling
-        return jsonify({
-            "error": f"SYSTEM ALERT: The AI server is unavailable ({str(e)}). Please try again."
-        }), 500
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
