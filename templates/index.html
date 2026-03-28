@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Task Architect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body
+    class="bg-slate-900 text-white min-h-screen flex flex-col items-center p-8"
+  >
+    <header class="text-center mb-12">
+      <h1
+        class="text-4xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent"
+      >
+        AI Task Architect
+      </h1>
+      <p class="text-slate-400 mt-2">
+        Transform your ideas into a technical roadmap.
+      </p>
+    </header>
+
+    <main
+      class="w-full max-w-2xl bg-slate-800 p-6 rounded-xl shadow-2xl border border-slate-700"
+    >
+      <div class="flex gap-2">
+        <input
+          type="text"
+          id="userGoal"
+          placeholder="e.g. Build a 3D Portfolio with Three.js"
+          class="flex-1 p-3 rounded-lg bg-slate-900 border border-slate-600 focus:outline-none focus:border-blue-500"
+        />
+        <button
+          onclick="generatePlan()"
+          id="btnText"
+          class="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-lg font-semibold transition"
+        >
+          Generate
+        </button>
+      </div>
+
+      <div
+        id="loading"
+        class="hidden mt-8 text-center text-blue-400 animate-pulse"
+      >
+        Architecting your plan...
+      </div>
+
+      <div id="result" class="hidden mt-8 space-y-4">
+        <div
+          class="flex justify-between items-center border-b border-slate-700 pb-2"
+        >
+          <h2 id="resTitle" class="text-2xl font-semibold"></h2>
+          <span
+            id="resDiff"
+            class="px-3 py-1 bg-slate-700 rounded-full text-xs uppercase tracking-widest"
+          ></span>
+        </div>
+        <ul id="resSteps" class="space-y-3"></ul>
+      </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>
